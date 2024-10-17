@@ -5,7 +5,7 @@
 
 resource "snowflake_account_role" "role_loader" {
   provider = snowflake.security_admin
-  name     = "role_loader"
+  name     = "ROLE_LOADER"
   comment  = "Loader can edit bronze models"
 }
 
@@ -20,7 +20,7 @@ resource "snowflake_grant_account_role" "loader_has_parent" {
 // -----------------------------------------------------------
 
 resource "snowflake_warehouse" "wh_loader" {
-  name           = "wh_loader"
+  name           = "WH_LOADER"
   warehouse_size = "xsmall"
   auto_suspend   = 60
 }
@@ -46,7 +46,7 @@ resource "tls_private_key" "key_cdc_runner" {
 
 resource "snowflake_user" "cdc_runner" {
   provider          = snowflake.security_admin
-  name              = "cdc_runner"
+  name              = "CDC_RUNNER"
   default_warehouse = snowflake_warehouse.wh_loader.name
   default_role      = snowflake_account_role.role_loader.name
   default_namespace = snowflake_database.db_bronze.name

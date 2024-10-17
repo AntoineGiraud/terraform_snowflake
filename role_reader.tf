@@ -5,7 +5,7 @@
 
 resource "snowflake_account_role" "role_reader" {
   provider = snowflake.security_admin
-  name     = "role_reader"
+  name     = "ROLE_READER"
   comment  = "Reader can read all models"
 }
 
@@ -20,7 +20,7 @@ resource "snowflake_grant_account_role" "reader_has_parent" {
 // -----------------------------------------------------------
 
 resource "snowflake_warehouse" "wh_reader" {
-  name           = "wh_reader"
+  name           = "WH_READER"
   warehouse_size = "xsmall"
   auto_suspend   = 60
 }

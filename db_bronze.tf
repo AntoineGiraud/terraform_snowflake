@@ -1,22 +1,22 @@
 
 
-// -----------------------------------------------------------
-// database creation (sysAdmin) & grant (securityAdmin)
-// -----------------------------------------------------------
+// -----------------------------------
+// database creation (sysAdmin)
+// -----------------------------------
 
 resource "snowflake_database" "db_bronze" {
-  name = "db_bronze"
+  name = "DB_BRONZE"
 }
 
-// -----------------------------------------------------------
-// schema creation (sysAdmin) & grant (securityAdmin)
-// -----------------------------------------------------------
+// ------------------------------------
+// schema creation (sysAdmin)
+// ------------------------------------
 
 resource "snowflake_schema" "sch_sage_x3_cdc" {
   database = snowflake_database.db_bronze.name
-  name     = "sage_x3_cdc"
+  name     = "SAGE_X3_CDC"
 }
 resource "snowflake_schema" "sch_sage_x3_full" {
   database = snowflake_database.db_bronze.name
-  name     = "sage_x3_full"
+  name     = "SAGE_X3_FULL"
 }

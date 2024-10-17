@@ -37,3 +37,7 @@ in each env', we have the 3 following database & schemas
   all object roles must have sysAdmin as a parent
 - **accountAdmin** : parent de userAdmin, securityAdmin, sysAdmin\
   ~ Dieu 😎 => n'utiliser qu'en extrème urgence #drop
+
+## récap
+
+![recap](./demo_terraform_snowflake_brz_slv_gld.jpg)

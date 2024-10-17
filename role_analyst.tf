@@ -5,7 +5,7 @@
 
 resource "snowflake_account_role" "role_analyst" {
   provider = snowflake.security_admin
-  name     = "role_analyst"
+  name     = "ROLE_ANALYST"
   comment  = "Analyst can edit silver & gold models ... except on PROD db"
 }
 
@@ -20,7 +20,7 @@ resource "snowflake_grant_account_role" "analyst_has_parent" {
 // -----------------------------------------------------------
 
 resource "snowflake_warehouse" "wh_analyst" {
-  name           = "wh_analyst"
+  name           = "WH_ANALYST"
   warehouse_size = "xsmall"
   auto_suspend   = 60
 }
