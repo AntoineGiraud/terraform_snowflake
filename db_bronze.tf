@@ -5,7 +5,7 @@
 // -----------------------------------
 
 resource "snowflake_database" "db_bronze" {
-  name = "DB_BRONZE"
+  name = "TLS_DB_BRONZE"
 }
 
 // ------------------------------------

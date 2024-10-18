@@ -7,19 +7,30 @@ terraform {
   }
 }
 
-provider "snowflake" {
-  role = "SYSADMIN"
-  account = "pamagkh-kq07327"
-  user = "terraform_usr"
-  authenticator = "JWT"
-  private_key = file("C:/Users/antoine.giraud/.ssh/om_pharma/snowflake_tf_snow_key.p8")
-}
+# SELECT LOWER(current_organization_name() || '-' || current_account_name()) as YOUR_SNOWFLAKE_ACCOUNT;
 
 provider "snowflake" {
-  alias = "security_admin"
-  role = "SECURITYADMIN"
-  account = "pamagkh-kq07327"
-  user = "terraform_usr"
+  # alias         = "sys_admin"
+  role          = "SYSADMIN"
+  account       = "qgbwkfk-keyrus"
+  user          = "agiraud"
   authenticator = "JWT"
-  private_key = file("C:/Users/antoine.giraud/.ssh/om_pharma/snowflake_tf_snow_key.p8")
+  private_key   = file("~/.ssh/keyrus/key_agiraud_snowflake")
+}
+
+# provider "snowflake" {
+#   role          = snowflake_account_role.role_tls_sysadmin.name
+#   account       = "qgbwkfk-keyrus"
+#   user          = "agiraud"
+#   authenticator = "JWT"
+#   private_key   = file("~/.ssh/keyrus/key_agiraud_snowflake")
+# }
+
+provider "snowflake" {
+  alias         = "security_admin"
+  role          = "SECURITYADMIN"
+  account       = "qgbwkfk-keyrus"
+  user          = "agiraud"
+  authenticator = "JWT"
+  private_key   = file("~/.ssh/keyrus/key_agiraud_snowflake")
 }

@@ -5,14 +5,14 @@
 
 resource "snowflake_account_role" "role_transformer" {
   provider = snowflake.security_admin
-  name     = "ROLE_TRANSFORMER"
+  name     = "TLS_ROLE_TRANSFORMER"
   comment  = "Transformer can edit Silver & Gold models"
 }
 
 resource "snowflake_grant_account_role" "transformer_has_parent" {
   provider         = snowflake.security_admin
   role_name        = snowflake_account_role.role_transformer.name
-  parent_role_name = "SYSADMIN"
+  parent_role_name = snowflake_account_role.role_tls_sysadmin.name
 }
 
 // -----------------------------------------------------------
@@ -20,7 +20,7 @@ resource "snowflake_grant_account_role" "transformer_has_parent" {
 // -----------------------------------------------------------
 
 resource "snowflake_warehouse" "wh_transformer" {
-  name           = "WH_TRANSFORMER"
+  name           = "TLS_WH_TRANSFORMER"
   warehouse_size = "xsmall"
   auto_suspend   = 60
 }
@@ -46,7 +46,7 @@ resource "tls_private_key" "key_dbt_runner" {
 
 resource "snowflake_user" "dbt_runner" {
   provider          = snowflake.security_admin
-  name              = "DBT_RUNNER"
+  name              = "TLS_DBT_RUNNER"
   default_warehouse = snowflake_warehouse.wh_transformer.name
   default_role      = snowflake_account_role.role_transformer.name
   default_namespace = snowflake_database.db_bronze.name

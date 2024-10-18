@@ -5,14 +5,14 @@
 
 resource "snowflake_account_role" "role_reader" {
   provider = snowflake.security_admin
-  name     = "ROLE_READER"
+  name     = "TLS_ROLE_READER"
   comment  = "Reader can read all models"
 }
 
 resource "snowflake_grant_account_role" "reader_has_parent" {
   provider         = snowflake.security_admin
   role_name        = snowflake_account_role.role_reader.name
-  parent_role_name = "SYSADMIN"
+  parent_role_name = snowflake_account_role.role_tls_sysadmin.name
 }
 
 // -----------------------------------------------------------
@@ -20,7 +20,7 @@ resource "snowflake_grant_account_role" "reader_has_parent" {
 // -----------------------------------------------------------
 
 resource "snowflake_warehouse" "wh_reader" {
-  name           = "WH_READER"
+  name           = "TLS_WH_READER"
   warehouse_size = "xsmall"
   auto_suspend   = 60
 }

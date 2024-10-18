@@ -5,14 +5,14 @@
 
 resource "snowflake_account_role" "role_analyst" {
   provider = snowflake.security_admin
-  name     = "ROLE_ANALYST"
+  name     = "TLS_ROLE_ANALYST"
   comment  = "Analyst can edit silver & gold models ... except on PROD db"
 }
 
 resource "snowflake_grant_account_role" "analyst_has_parent" {
   provider         = snowflake.security_admin
   role_name        = snowflake_account_role.role_analyst.name
-  parent_role_name = "SYSADMIN"
+  parent_role_name = snowflake_account_role.role_tls_sysadmin.name
 }
 
 // -----------------------------------------------------------
@@ -20,7 +20,7 @@ resource "snowflake_grant_account_role" "analyst_has_parent" {
 // -----------------------------------------------------------
 
 resource "snowflake_warehouse" "wh_analyst" {
-  name           = "WH_ANALYST"
+  name           = "TLS_WH_ANALYST"
   warehouse_size = "xsmall"
   auto_suspend   = 60
 }

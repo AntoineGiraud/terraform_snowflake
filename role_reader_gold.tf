@@ -5,7 +5,7 @@
 
 resource "snowflake_account_role" "role_readerGold" {
   provider = snowflake.security_admin
-  name     = "ROLE_READER_GOLD"
+  name     = "TLS_ROLE_READER_GOLD"
   comment  = "Reader gold can read only gold models"
 }
 
