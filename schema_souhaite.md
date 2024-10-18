@@ -1,3 +1,17 @@
+# Infra As Code & Snowflake
+
+🎯 Goal : **Infra as Code** with Terraform
+
+- for dev / prod environnements (db / schema / wh)
+- for **role** creations & **grants** to db / schema / wh
+
+![recap](./snow_terraform_dbt.png)
+
+🎓 Ressources
+
+- Mistertemp : [article IaC & Snow](https://tech.mistertemp.com/infra-as-code-avec-snowflake-ab961dd4d190?gi=a9060ed6cd68) (img up there 👆)
+- ❄️ quickstart : [terraforming snowflake](https://quickstarts.snowflake.com/guide/terraforming_snowflake/index.html) ([github demo](https://github.com/Snowflake-Labs/sfguide-terraform-sample)) ✅
+- ❄️ Github : [Snowflake-Labs/terraform-provider-snowflake](https://github.com/Snowflake-Labs/terraform-provider-snowflake) > [examples](https://github.com/Snowflake-Labs/terraform-provider-snowflake/tree/main/examples)
 
 ## Archi CIBLE 🎯
 
@@ -29,7 +43,7 @@ in each env', we have the 3 following database & schemas
   - 🖥️ `reader_warehouse`
   - **reader_gold** : can read gold layers only
 
-### 🪖 Admin roles
+### 🪖 Admin roles in Snowflake ❄️
 
 - **userAdmin** : add user & adjust ssh public key
 - **securityAdmin** : grant privileges (user to group, object to group, group to group ...)
