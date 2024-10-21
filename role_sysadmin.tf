@@ -11,14 +11,13 @@ resource "snowflake_grant_account_role" "tlsOwner_has_parent" {
   parent_role_name = "SYSADMIN"
 }
 
-resource "snowflake_grant_account_role" "grants_usr_agiraud" {
-  provider  = snowflake.security_admin
-  role_name = snowflake_account_role.role_tls_sysadmin.name
-  user_name = "AGIRAUD"
-}
+# grant to all usr's
+resource "snowflake_grant_account_role" "grants_usr_sysadmin" {
+  depends_on = [snowflake_grant_account_role.tlsOwner_has_parent]
+  provider   = snowflake.security_admin
+  role_name  = snowflake_account_role.role_tls_sysadmin.name
 
-resource "snowflake_grant_account_role" "grants_usr_fgaudey" {
-  provider  = snowflake.security_admin
-  role_name = snowflake_account_role.role_tls_sysadmin.name
-  user_name = "FGAUDEY"
+  for_each = toset(["AGIRAUD", "FGAUDEY"])
+
+  user_name = each.key
 }
