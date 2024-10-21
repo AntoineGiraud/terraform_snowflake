@@ -61,3 +61,20 @@ module "db_rights_reader" {
   schema_rights   = ["USAGE"]
   objects_rights  = ["SELECT"]
 }
+
+// ---------------------------------------------
+// add service account
+// ---------------------------------------------
+
+module "reader_create_runner" {
+  source = "./modules/service_account"
+
+  providers = {
+    snowflake = snowflake.security_admin
+  }
+
+  runner_name            = "TLS_CATALOG_RUNNER"
+  default_role_name      = snowflake_account_role.role_loader.name
+  default_warehouse_name = snowflake_warehouse.wh_reader.name
+  default_database_name  = snowflake_database.db_gold.name
+}

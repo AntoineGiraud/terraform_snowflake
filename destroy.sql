@@ -10,8 +10,8 @@ drop role tls_role_reader_gold;
 drop role tls_role_transformer;
 drop role tls_role_sysadmin;
 
-drop user TLS_CDC_RUNNER_DEV;
-drop user TLS_CDC_RUNNER_PROD;
+drop user TLS_CATALOG_RUNNER;
+drop user TLS_CDC_RUNNER;
 drop user TLS_DBT_RUNNER;
 
 drop database tls_db_bronze cascade;
