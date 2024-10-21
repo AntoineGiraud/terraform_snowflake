@@ -54,4 +54,7 @@ in each env', we have the 3 following database & schemas
 
 ## récap
 
+![recap](./demo_terraform_snowflake_brz_slv_gld_xEnvDevProd.jpg)
+
+~ sous le **capot** 🚘
 ![recap](./demo_terraform_snowflake_brz_slv_gld.jpg)
