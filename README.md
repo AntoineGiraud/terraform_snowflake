@@ -54,6 +54,7 @@ in each env', we have the 3 following database & schemas
 
 ## récap
 
+note: **dev reader & transformer** need **prod reader** role :) #deferToProd
 ![recap](./demo_terraform_snowflake_brz_slv_gld_xEnvDevProd.jpg)
 
 ~ sous le **capot** 🚘
