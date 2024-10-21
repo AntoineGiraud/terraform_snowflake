@@ -5,7 +5,7 @@
 
 resource "snowflake_account_role" "role_reader" {
   provider = snowflake.security_admin
-  name     = "TLS_ROLE_READER"
+  name     = "${var.env_name}_ROLE_READER"
   comment  = "Reader can read all models"
 }
 
@@ -13,7 +13,7 @@ resource "snowflake_grant_account_role" "reader_has_parent" {
   #   depends_on       = [snowflake_grant_ownership.db_owner, snowflake_grant_account_role.grants_usr_sysadmin]
   provider         = snowflake.security_admin
   role_name        = snowflake_account_role.role_reader.name
-  parent_role_name = snowflake_account_role.role_tls_sysadmin.name
+  parent_role_name = snowflake_account_role.role_sysadmin.name
 }
 
 // -----------------------------------------------------------
@@ -21,7 +21,8 @@ resource "snowflake_grant_account_role" "reader_has_parent" {
 // -----------------------------------------------------------
 
 resource "snowflake_warehouse" "wh_reader" {
-  name           = "TLS_WH_READER"
+  provider       = snowflake.sys_admin
+  name           = "${var.env_name}_WH_READER"
   warehouse_size = "xsmall"
   auto_suspend   = 60
 }
@@ -42,7 +43,7 @@ resource "snowflake_grant_privileges_to_account_role" "wh_grant_reader" {
 // -----------------------------------------------------------
 
 module "db_rights_reader" {
-  source     = "./modules/db_rights"
+  source     = "../db_rights"
   depends_on = [snowflake_grant_ownership.db_owner_brz, snowflake_grant_ownership.db_owner_slv_gld, snowflake_grant_ownership.db_owner_brz_schemas]
 
   for_each = toset([
@@ -67,14 +68,14 @@ module "db_rights_reader" {
 // ---------------------------------------------
 
 module "reader_create_runner" {
-  source = "./modules/service_account"
+  source = "../service_account"
 
   providers = {
     snowflake = snowflake.security_admin
   }
 
-  runner_name            = "TLS_CATALOG_RUNNER"
-  default_role_name      = snowflake_account_role.role_loader.name
+  runner_name            = "${var.env_name}_CATALOG_RUNNER"
+  default_role_name      = snowflake_account_role.role_reader.name
   default_warehouse_name = snowflake_warehouse.wh_reader.name
   default_database_name  = snowflake_database.db_gold.name
 }

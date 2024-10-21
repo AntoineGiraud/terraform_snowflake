@@ -5,7 +5,7 @@
 
 resource "snowflake_account_role" "role_readerGold" {
   provider = snowflake.security_admin
-  name     = "TLS_ROLE_READER_GOLD"
+  name     = "${var.env_name}_ROLE_READER_GOLD"
   comment  = "Reader gold can read only gold models"
 }
 
@@ -34,7 +34,7 @@ resource "snowflake_grant_privileges_to_account_role" "wh_grant_readerGold" {
 // -----------------------------------------------------------
 
 module "db_rights_reader_gold" {
-  source     = "./modules/db_rights"
+  source     = "../db_rights"
   depends_on = [snowflake_grant_ownership.db_owner_brz, snowflake_grant_ownership.db_owner_slv_gld, snowflake_grant_ownership.db_owner_brz_schemas]
 
   providers = {

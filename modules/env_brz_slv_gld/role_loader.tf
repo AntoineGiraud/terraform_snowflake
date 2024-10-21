@@ -5,14 +5,14 @@
 
 resource "snowflake_account_role" "role_loader" {
   provider = snowflake.security_admin
-  name     = "TLS_ROLE_LOADER"
+  name     = "${var.env_name}_ROLE_LOADER"
   comment  = "Loader can edit bronze models"
 }
 
 resource "snowflake_grant_account_role" "loader_has_parent" {
   provider         = snowflake.security_admin
   role_name        = snowflake_account_role.role_loader.name
-  parent_role_name = snowflake_account_role.role_tls_sysadmin.name
+  parent_role_name = snowflake_account_role.role_sysadmin.name
 }
 
 // -----------------------------------------------------------
@@ -20,7 +20,8 @@ resource "snowflake_grant_account_role" "loader_has_parent" {
 // -----------------------------------------------------------
 
 resource "snowflake_warehouse" "wh_loader" {
-  name           = "TLS_WH_LOADER"
+  provider       = snowflake.sys_admin
+  name           = "${var.env_name}_WH_LOADER"
   warehouse_size = "xsmall"
   auto_suspend   = 60
 }
@@ -41,13 +42,13 @@ resource "snowflake_grant_privileges_to_account_role" "wh_grant_loader" {
 // ---------------------------------------------
 
 module "loader_create_runner" {
-  source = "./modules/service_account"
+  source = "../service_account"
 
   providers = {
     snowflake = snowflake.security_admin
   }
 
-  runner_name            = "TLS_CDC_RUNNER"
+  runner_name            = "${var.env_name}_CDC_RUNNER"
   default_role_name      = snowflake_account_role.role_loader.name
   default_warehouse_name = snowflake_warehouse.wh_loader.name
   default_database_name  = snowflake_database.db_bronze.name
