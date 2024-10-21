@@ -32,3 +32,14 @@ resource "snowflake_grant_account_role" "tlsOwnerDev_has_parent_chapeau" {
   role_name        = module.create_env_tls_dev.role_sysadmin
   parent_role_name = snowflake_account_role.role_tls_sysadmin_chapeau.name
 }
+
+resource "snowflake_grant_account_role" "readerDev_can_readerProd" {
+  provider         = snowflake.security_admin
+  role_name        = module.create_env_tls.role_reader
+  parent_role_name = module.create_env_tls_dev.role_reader
+}
+resource "snowflake_grant_account_role" "transformerDev_can_readerProd" {
+  provider         = snowflake.security_admin
+  role_name        = module.create_env_tls.role_reader
+  parent_role_name = module.create_env_tls_dev.role_transformer
+}
