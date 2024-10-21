@@ -10,6 +10,7 @@ resource "snowflake_account_role" "role_reader" {
 }
 
 resource "snowflake_grant_account_role" "reader_has_parent" {
+  #   depends_on       = [snowflake_grant_ownership.db_owner, snowflake_grant_account_role.grants_usr_sysadmin]
   provider         = snowflake.security_admin
   role_name        = snowflake_account_role.role_reader.name
   parent_role_name = snowflake_account_role.role_tls_sysadmin.name
@@ -40,109 +41,23 @@ resource "snowflake_grant_privileges_to_account_role" "wh_grant_reader" {
 // read on all db & schemas - grant (securityAdmin)
 // -----------------------------------------------------------
 
-# ------------------------------------
-# databases
-# ------------------------------------
-resource "snowflake_grant_privileges_to_account_role" "db_grant_bronze_reader" {
-  provider          = snowflake.security_admin
-  privileges        = ["USAGE"]
-  account_role_name = snowflake_account_role.role_reader.name
-  on_account_object {
-    object_type = "DATABASE"
-    object_name = snowflake_database.db_bronze.name
-  }
-}
-resource "snowflake_grant_privileges_to_account_role" "db_grant_silver_reader" {
-  provider          = snowflake.security_admin
-  privileges        = ["USAGE"]
-  account_role_name = snowflake_account_role.role_reader.name
-  on_account_object {
-    object_type = "DATABASE"
-    object_name = snowflake_database.db_silver.name
-  }
-}
-resource "snowflake_grant_privileges_to_account_role" "db_grant_gold_reader" {
-  provider          = snowflake.security_admin
-  privileges        = ["USAGE"]
-  account_role_name = snowflake_account_role.role_reader.name
-  on_account_object {
-    object_type = "DATABASE"
-    object_name = snowflake_database.db_gold.name
-  }
-}
+module "db_rights_reader" {
+  source     = "./modules/db_rights"
+  depends_on = [snowflake_grant_ownership.db_owner_brz, snowflake_grant_ownership.db_owner_slv_gld, snowflake_grant_ownership.db_owner_brz_schemas]
 
-# ------------------------------------
-# schemas
-# ------------------------------------
-resource "snowflake_grant_privileges_to_account_role" "schema_grant_all_bronze_reader" {
-  provider          = snowflake.security_admin
-  privileges        = ["USAGE"]
-  account_role_name = snowflake_account_role.role_reader.name
-  on_schema {
-    # schema_name = "${snowflake_database.db_bronze.name}.${snowflake_schema.sch_sage_x3_cdc.name}"
-    all_schemas_in_database = snowflake_database.db_bronze.name
-  }
-}
+  for_each = toset([
+    snowflake_database.db_bronze.name,
+    snowflake_database.db_silver.name,
+    snowflake_database.db_gold.name
+  ])
 
-resource "snowflake_grant_privileges_to_account_role" "schema_grant_future_bronze_reader" {
-  provider          = snowflake.security_admin
-  privileges        = ["USAGE"]
-  account_role_name = snowflake_account_role.role_reader.name
-  on_schema {
-    future_schemas_in_database = snowflake_database.db_bronze.name
+  providers = {
+    snowflake = snowflake.security_admin
   }
-}
 
-# ------------------------------------
-# tables
-# ------------------------------------
-resource "snowflake_grant_privileges_to_account_role" "table_grant_all_bronze_reader" {
-  provider          = snowflake.security_admin
-  privileges        = ["SELECT"]
-  account_role_name = snowflake_account_role.role_reader.name
-  on_schema_object {
-    all {
-      object_type_plural = "TABLES"
-      in_database        = snowflake_database.db_bronze.name
-    }
-  }
-}
-
-resource "snowflake_grant_privileges_to_account_role" "table_grant_future_bronze_reader" {
-  provider          = snowflake.security_admin
-  privileges        = ["SELECT"]
-  account_role_name = snowflake_account_role.role_reader.name
-  on_schema_object {
-    future {
-      object_type_plural = "TABLES"
-      in_database        = snowflake_database.db_bronze.name
-    }
-  }
-}
-
-# ------------------------------------
-# views
-# ------------------------------------
-resource "snowflake_grant_privileges_to_account_role" "view_grant_all_bronze_reader" {
-  provider          = snowflake.security_admin
-  privileges        = ["SELECT"]
-  account_role_name = snowflake_account_role.role_reader.name
-  on_schema_object {
-    all {
-      object_type_plural = "TABLES"
-      in_database        = snowflake_database.db_bronze.name
-    }
-  }
-}
-
-resource "snowflake_grant_privileges_to_account_role" "view_grant_future_bronze_reader" {
-  provider          = snowflake.security_admin
-  privileges        = ["SELECT"]
-  account_role_name = snowflake_account_role.role_reader.name
-  on_schema_object {
-    future {
-      object_type_plural = "TABLES"
-      in_database        = snowflake_database.db_bronze.name
-    }
-  }
+  database_name   = each.key
+  role_name       = snowflake_account_role.role_reader.name
+  database_rights = ["USAGE"]
+  schema_rights   = ["USAGE"]
+  objects_rights  = ["SELECT"]
 }

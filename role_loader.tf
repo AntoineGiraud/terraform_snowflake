@@ -71,7 +71,7 @@ resource "snowflake_grant_account_role" "grants_usr_loader_prod" {
 
 
 // ---------------------------------------------
-// SECURITYADMIN & add usr to group
+// add service account
 // ---------------------------------------------
 
 resource "tls_private_key" "key_cdc_runner_dev" {

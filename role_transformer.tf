@@ -36,7 +36,7 @@ resource "snowflake_grant_privileges_to_account_role" "wh_grant_transformer" {
 }
 
 // ---------------------------------------------
-// SECURITYADMIN & add usr to group
+// add service account
 // ---------------------------------------------
 
 resource "tls_private_key" "key_dbt_runner" {

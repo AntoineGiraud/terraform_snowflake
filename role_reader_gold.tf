@@ -28,3 +28,22 @@ resource "snowflake_grant_privileges_to_account_role" "wh_grant_readerGold" {
     object_name = snowflake_warehouse.wh_reader.name
   }
 }
+
+// -----------------------------------------------------------
+// read on all db & schemas - grant (securityAdmin)
+// -----------------------------------------------------------
+
+module "db_rights_reader_gold" {
+  source     = "./modules/db_rights"
+  depends_on = [snowflake_grant_ownership.db_owner_brz, snowflake_grant_ownership.db_owner_slv_gld, snowflake_grant_ownership.db_owner_brz_schemas]
+
+  providers = {
+    snowflake = snowflake.security_admin
+  }
+
+  database_name   = snowflake_database.db_gold.name
+  role_name       = snowflake_account_role.role_readerGold.name
+  database_rights = ["USAGE"]
+  schema_rights   = ["USAGE"]
+  objects_rights  = ["SELECT"]
+}
