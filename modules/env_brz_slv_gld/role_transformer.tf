@@ -53,3 +53,22 @@ module "transformer_create_runner" {
   default_warehouse_name = snowflake_warehouse.wh_transformer.name
   default_database_name  = snowflake_database.db_silver.name
 }
+
+// -----------------------------------------------------------
+// read on all db & schemas - grant (securityAdmin)
+// -----------------------------------------------------------
+
+module "db_rights_transformer" {
+  source     = "../db_rights"
+  depends_on = [snowflake_grant_ownership.db_owner_brz, snowflake_grant_ownership.db_owner_slv_gld, snowflake_grant_ownership.db_owner_brz_schemas]
+
+  providers = {
+    snowflake = snowflake.security_admin
+  }
+
+  database_name   = snowflake_database.db_bronze.name
+  role_name       = snowflake_account_role.role_transformer.name
+  database_rights = ["USAGE"]
+  schema_rights   = ["USAGE"]
+  objects_rights  = ["SELECT"]
+}
