@@ -7,13 +7,19 @@
 
 ![recap](./snow_terraform_dbt.png)
 
-🎓 Ressources
+🎓 Ressources IaC
 
 - Mistertemp : [article IaC & Snow](https://tech.mistertemp.com/infra-as-code-avec-snowflake-ab961dd4d190?gi=a9060ed6cd68) (img up there 👆)
 - ❄️ quickstart : [terraforming snowflake](https://quickstarts.snowflake.com/guide/terraforming_snowflake/index.html) ([github demo](https://github.com/Snowflake-Labs/sfguide-terraform-sample)) ✅
 - ❄️ Github : [Snowflake-Labs/terraform-provider-snowflake](https://github.com/Snowflake-Labs/terraform-provider-snowflake) > [examples](https://github.com/Snowflake-Labs/terraform-provider-snowflake/tree/main/examples)
 
-## Archi CIBLE 🎯
+🎓 Ressources Snowflake Roles & Grants
+
+- dbt doc :  [Snowflake ❄️ permissions](https://docs.getdbt.com/reference/database-permissions/snowflake-permissions)
+- dbt blog :  [Setting up Snowflake ❄️ — the exact grant statements we run](https://discourse.getdbt.com/t/setting-up-snowflake-the-exact-grant-statements-we-run/439)
+- 🦫 CastorDoc : [dbt & snowflake ❄️](https://www.castordoc.com/blog/dbt-snowflake)
+
+## 🎯 Target Architecture
 
 ### environnments: `dev` | `val` | `prod`
 
@@ -52,7 +58,7 @@ in each env', we have the 3 following database & schemas
 - **accountAdmin** : parent de userAdmin, securityAdmin, sysAdmin\
   ~ Dieu 😎 => n'utiliser qu'en extrème urgence #drop
 
-## récap
+## Summary
 
 note: **dev reader & transformer** need **prod reader** role :) #deferToProd
 ![recap](./demo_terraform_snowflake_brz_slv_gld_xEnvDevProd.jpg)
