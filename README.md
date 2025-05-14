@@ -12,6 +12,7 @@
 - Mistertemp : [article IaC & Snow](https://tech.mistertemp.com/infra-as-code-avec-snowflake-ab961dd4d190?gi=a9060ed6cd68) (img up there 👆)
 - ❄️ quickstart : [terraforming snowflake](https://quickstarts.snowflake.com/guide/terraforming_snowflake/index.html) ([github demo](https://github.com/Snowflake-Labs/sfguide-terraform-sample)) ✅
 - ❄️ Github : [Snowflake-Labs/terraform-provider-snowflake](https://github.com/Snowflake-Labs/terraform-provider-snowflake) > [examples](https://github.com/Snowflake-Labs/terraform-provider-snowflake/tree/main/examples)
+- [Install terraform](https://developer.hashicorp.com/terraform/install)
 
 🎓 Ressources Snowflake Roles & Grants
 
@@ -65,3 +66,33 @@ note: **dev reader & transformer** need **prod reader** role :) #deferToProd
 
 ~ sous le **capot** 🚘
 ![recap](./demo_terraform_snowflake_brz_slv_gld.jpg)
+
+## Setup & useful commands
+
+### Setup & install
+
+- [Install terraform](https://developer.hashicorp.com/terraform/install)
+- have your snowflake admin account .ssh keys ready & adjust paths in `main.tf`
+
+#### ssh setup & snowflake
+
+```bash
+# setup ssh key for your service account
+ssh-keygen -t rsa -b 2048 -m pkcs8 -C "agiraud_snow" -f key_agiraud_snowflake
+# show the public key to setup in snowflake (special format required)
+ssh-keygen -e -f .\key_agiraud_snowflake.pub -m pkcs8
+# copy past it in rsa_public_key
+```
+
+```sql
+-- in snowflake
+use role USERADMIN;
+alter user AGIRAUDEMO set rsa_public_key_2='3QIDAQAB';
+```
+
+### useful commands
+
+- `terraform init` to install project depedencies
+- `terraform plan` to plan the deployment
+- `terraform apply` to deploy to target
+- `terraform destroy` 🧨
