@@ -13,7 +13,7 @@ resource "snowflake_grant_account_role" "reader_has_parent" {
   #   depends_on       = [snowflake_grant_ownership.db_owner, snowflake_grant_account_role.grants_usr_sysadmin]
   provider         = snowflake.security_admin
   role_name        = snowflake_account_role.role_reader.name
-  parent_role_name = snowflake_account_role.role_sysadmin.name
+  parent_role_name = snowflake_account_role.role_transformer.name
 }
 
 // -----------------------------------------------------------

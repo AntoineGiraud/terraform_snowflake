@@ -7,7 +7,7 @@ terraform {
   }
 }
 
-# SELECT LOWER(current_organization_name() || '-' || current_account_name()) as YOUR_SNOWFLAKE_ACCOUNT;
+# select lower(current_account_name()) as your_account_name, lower(current_organization_name()) as your_org_name;
 locals {
   user              = "AGIRAUDEMO"
   account_name      = "nab96986"
