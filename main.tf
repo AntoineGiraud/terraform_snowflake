@@ -8,32 +8,32 @@ terraform {
 }
 
 # SELECT LOWER(current_organization_name() || '-' || current_account_name()) as YOUR_SNOWFLAKE_ACCOUNT;
+locals {
+  user              = "AGIRAUDEMO"
+  account_name      = "nab96986"
+  organization_name = "vqgxapg"
+  private_key_path  = "~/.ssh_windows/perso/key_agiraud_snowflake"
+}
+
 
 provider "snowflake" {
   alias         = "sys_admin"
   role          = "SYSADMIN"
-  account       = "qgbwkfk-keyrus"
-  user          = "AGIRAUD"
-  authenticator = "JWT"
-  private_key   = file("~/.ssh/keyrus/key_agiraud_snowflake")
+  organization_name = local.organization_name
+  account_name      = local.account_name
+  user          = local.user
+  authenticator = "SNOWFLAKE_JWT"
+  private_key       = file(local.private_key_path)
 }
-
-# provider "snowflake" {
-#   alias         = "tls_sys_admin"
-#   role          = snowflake_account_role.role_sysadmin.name
-#   account       = "qgbwkfk-keyrus"
-#   user          = "AGIRAUD"
-#   authenticator = "JWT"
-#   private_key   = file("~/.ssh/keyrus/key_agiraud_snowflake")
-# }
 
 provider "snowflake" {
   alias         = "security_admin"
   role          = "SECURITYADMIN"
-  account       = "qgbwkfk-keyrus"
-  user          = "AGIRAUD"
-  authenticator = "JWT"
-  private_key   = file("~/.ssh/keyrus/key_agiraud_snowflake")
+  organization_name = local.organization_name
+  account_name      = local.account_name
+  user          = local.user
+  authenticator = "SNOWFLAKE_JWT"
+  private_key       = file(local.private_key_path)
 }
 
 # --------------------------------------------------
