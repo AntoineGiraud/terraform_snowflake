@@ -96,3 +96,14 @@ alter user AGIRAUDEMO set rsa_public_key_2='3QIDAQAB';
 - `terraform plan` to plan the deployment
 - `terraform apply` to deploy to target
 - `terraform destroy` 🧨
+
+commandes plus avancées
+
+- renommer une ressource
+  - `terraform stave mv type.premier_nom type.second_nom`
+  - autre option : dans le code .tf `moved {from = type.premier_nom to type.second_nom}`
+- dire à terraform qu'il n'a plus à "maintenir" une ressource données
+  - `terraform stave rm type.nom_ressource`
+- une ressource exite déjà, je veux désormais la gérer avec terraform
+  - `terraform import aws_s3_bucket.bucket bucket-name`
+- `terraform state list`
