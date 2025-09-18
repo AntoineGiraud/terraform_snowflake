@@ -5,11 +5,15 @@
   "mounts": [
     "source=${localWorkspaceFolder},target=/workspace,type=bind"
   ],
-  "settings": {
-    "terminal.integrated.shell.linux": "/bin/sh"
-  },
-  "extensions": [
-    "hashicorp.terraform",
-    "ms-azuretools.vscode-docker"
-  ]
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.shell.linux": "/bin/sh"
+      },
+      "extensions": [
+        "hashicorp.terraform",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  }
 }
