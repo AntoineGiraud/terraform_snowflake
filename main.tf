@@ -1,60 +1,41 @@
-terraform {
-  required_providers {
-    snowflake = {
-      source  = "Snowflake-Labs/snowflake"
-      version = "~> 0.87"
-    }
-  }
-}
 
-# select lower(current_account_name()) as your_account_name, lower(current_organization_name()) as your_org_name;
+
 locals {
-  user              = "AGIRAUDEMO"
-  account_name      = "nab96986"
-  organization_name = "vqgxapg"
-  private_key_path  = "~/.ssh_windows/perso/key_agiraud_snowflake"
+  bdd_alias = "AGIRAUD"
 }
 
-
-provider "snowflake" {
-  alias         = "sys_admin"
-  role          = "SYSADMIN"
-  organization_name = local.organization_name
-  account_name      = local.account_name
-  user          = local.user
-  authenticator = "SNOWFLAKE_JWT"
-  private_key       = file(local.private_key_path)
+# 1️⃣ Création de la DB et des schémas (SYSADMIN)
+module "db_schema_warehouse" {
+  source    = "./modules/db_schema_warehouse"
+  providers = { snowflake = snowflake.sysadmin }
+  alias = local.bdd_alias
 }
 
-provider "snowflake" {
-  alias         = "security_admin"
-  role          = "SECURITYADMIN"
-  organization_name = local.organization_name
-  account_name      = local.account_name
-  user          = local.user
-  authenticator = "SNOWFLAKE_JWT"
-  private_key       = file(local.private_key_path)
+# 2️⃣ Création des utilisateurs (USERADMIN)
+module "users" {
+  source    = "./modules/users"
+  providers = { snowflake = snowflake.useradmin }
+  alias = local.bdd_alias
 }
 
-# --------------------------------------------------
-# LET'S GOOOO
-# --------------------------------------------------
-module "create_env_tls" {
-  source   = "./modules/env_brz_slv_gld"
-  env_name = "TLS"
+# 3️⃣ Création des rôles & grants (SECURITYADMIN)
+module "grants_roles" {
+  source    = "./modules/grants_roles"
+  providers = { snowflake = snowflake.securityadmin }
 
-  providers = {
-    snowflake.security_admin = snowflake.security_admin,
-    snowflake.sys_admin      = snowflake.sys_admin
-  }
-}
+  # bdd & schémas
+  bdd = module.db_schema_warehouse.bdd  # sert d'alias
+  sch_bronze = module.db_schema_warehouse.sch_bronze
+  sch_silver = module.db_schema_warehouse.sch_silver
+  sch_gold = module.db_schema_warehouse.sch_gold
 
-module "create_env_tls_dev" {
-  source   = "./modules/env_brz_slv_gld"
-  env_name = "TLS_DEV"
+  # warehouse
+  wh_loading = module.db_schema_warehouse.wh_loading
+  wh_transforming = module.db_schema_warehouse.wh_transforming
+  wh_reading = module.db_schema_warehouse.wh_reading
 
-  providers = {
-    snowflake.security_admin = snowflake.security_admin,
-    snowflake.sys_admin      = snowflake.sys_admin
-  }
+  # user
+  usr_loader = module.users.usr_loader
+  usr_transformer = module.users.usr_transformer
+  usr_reader = module.users.usr_reader
 }

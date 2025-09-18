@@ -22,33 +22,17 @@
 
 ## 🎯 Target Architecture
 
-### environnments: `dev` | `val` | `prod`
+### environnments: 
 
-in each env', we have the 3 following database & schemas
-
-- 🥉 `{env}_db_bronze`
-  - `sage_x3_cdc`
-  - `sage_x3_full`
-  - ...
-- 🥈 `{env}_db_silver`
-  - schemas created by dbt
-- 🥇 `{env}_db_gold`
-  - schemas created by dbt
+1 db : alias
+3 shemas : 🥉🥈🥇
 
 ### 🎯 Roles
 
-- **loader** : usr kafka_debezium (dev / prod)\
-  can create/drop schemas & tables in db_bronze
-  - 🖥️ `loader_warehouse`
-- **transformer** : usr dbt_runner (dev / prod)\
-  can create/drop schemas & tables in db_silver & db_gold
-  - 🖥️ `transformer_warehouse`
-- **analyst** : can create/drop schemas & tables on all db\
-  **ONLY** on dev env'
-  - 🖥️ `analyst_warehouse`
-- **reader** : can read everywhere
-  - 🖥️ `reader_warehouse`
-  - **reader_gold** : can read gold layers only
+- **admin** (granted to sysadmin)
+  - **loader**       using 💻 `loading_wh`      owns 🥉 bonze schemas
+  - **transformer**  using 💻 `transforming_wh` owns 🥈 silver & 🥇 gold schemas
+    - **reader**     using 💻 `reading_wh`      reads all schemas 🥉🥈🥇
 
 ### 🪖 Admin roles in Snowflake ❄️
 
@@ -59,51 +43,43 @@ in each env', we have the 3 following database & schemas
 - **accountAdmin** : parent de userAdmin, securityAdmin, sysAdmin\
   ~ Dieu 😎 => n'utiliser qu'en extrème urgence #drop
 
-## Summary
-
-note: **dev reader & transformer** need **prod reader** role :) #deferToProd
-![recap](./demo_terraform_snowflake_brz_slv_gld_xEnvDevProd.jpg)
-
-~ sous le **capot** 🚘
-![recap](./demo_terraform_snowflake_brz_slv_gld.jpg)
-
 ## Setup & useful commands
 
 ### Setup & install
 
 - [Install terraform](https://developer.hashicorp.com/terraform/install)
-- have your snowflake admin account .ssh keys ready & adjust paths in `main.tf`
+- initialize `env.tfvars`
 
 #### ssh setup & snowflake
 
 ```bash
 # setup ssh key for your service account
-ssh-keygen -t rsa -b 2048 -m pkcs8 -C "agiraud_snow" -f key_agiraud_snowflake
+ssh-keygen -t rsa -b 2048 -m pkcs8 -C "USR_TERRAFORM" -f key_USR_TERRAFORM_snowflake
 # show the public key to setup in snowflake (special format required)
-ssh-keygen -e -f .\key_agiraud_snowflake.pub -m pkcs8
+ssh-keygen -e -f .\key_USR_TERRAFORM_snowflake.pub -m pkcs8
 # copy past it in rsa_public_key
 ```
 
 ```sql
 -- in snowflake
 use role USERADMIN;
-alter user AGIRAUDEMO set rsa_public_key_2='3QIDAQAB';
+alter user USR_TERRAFORM set rsa_public_key_2='3QIDAQAB';
 ```
 
 ### useful commands
 
 - `terraform init` to install project depedencies
-- `terraform plan` to plan the deployment
-- `terraform apply` to deploy to target
-- `terraform destroy` 🧨
+- `terraform plan -var-file="env/.tfvars"` to plan the deployment
+- `terraform apply -var-file="env/.tfvars"` to deploy to target
+- `terraform destroy -var-file="env/.tfvars"` 🧨
 
-commandes plus avancées
+### commandes avancées
 
 - renommer une ressource
-  - `terraform stave mv type.premier_nom type.second_nom`
+  - `terraform state mv type.premier_nom type.second_nom`
   - autre option : dans le code .tf `moved {from = type.premier_nom to type.second_nom}`
 - dire à terraform qu'il n'a plus à "maintenir" une ressource données
-  - `terraform stave rm type.nom_ressource`
+  - `terraform state rm type.nom_ressource`
 - une ressource exite déjà, je veux désormais la gérer avec terraform
   - `terraform import aws_s3_bucket.bucket bucket-name`
 - `terraform state list`
