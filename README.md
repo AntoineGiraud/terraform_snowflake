@@ -34,6 +34,8 @@
   - **transformer**  using 💻 `transforming_wh` owns 🥈 silver & 🥇 gold schemas
     - **reader**     using 💻 `reading_wh`      reads all schemas 🥉🥈🥇
 
+![snow_roles_and_schemas](./snow_roles_and_schemas.png)
+
 ### 🪖 Admin roles in Snowflake ❄️
 
 - **userAdmin** : add user & adjust ssh public key
