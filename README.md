@@ -12,7 +12,9 @@
 - Mistertemp : [article IaC & Snow](https://tech.mistertemp.com/infra-as-code-avec-snowflake-ab961dd4d190?gi=a9060ed6cd68) (img up there 👆)
 - ❄️ quickstart : [terraforming snowflake](https://quickstarts.snowflake.com/guide/terraforming_snowflake/index.html) ([github demo](https://github.com/Snowflake-Labs/sfguide-terraform-sample)) ✅
 - ❄️ Github : [Snowflake-Labs/terraform-provider-snowflake](https://github.com/Snowflake-Labs/terraform-provider-snowflake) > [examples](https://github.com/Snowflake-Labs/terraform-provider-snowflake/tree/main/examples)
-- [Install terraform](https://developer.hashicorp.com/terraform/install)
+- doc [erraform install](https://developer.hashicorp.com/terraform/install)
+- Medium [Mastering snowflake governance terraform](https://medium.com/@vijaygadhave2014/mastering-snowflake-governance-terraform-dbt-real-time-automation-a0be8b9ca73b)
+- Github [b-per/dbt-terraform-modules](https://github.com/b-per/dbt-terraform-modules)
 
 🎓 Ressources Snowflake Roles & Grants
 
